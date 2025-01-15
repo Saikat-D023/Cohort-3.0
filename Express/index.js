@@ -1,45 +1,63 @@
-const express = require('express');
+const express = require("express");
 const jwt = require("jsonwebtoken");
 
-const JWT_SECRET = "saikat358";
+const JWT_SECRET = "kirat123123";
+
 const app = express();
-app.use(express.json())
+app.use(express.json());
 
 const users = [];
 
-app.post("/signup", (req,res) => {
+function logger(req, res, next) {
+    console.log(req.method + " request came");
+    next();
+}
+
+app.post("/signup", logger, function(req, res) {
     const username = req.body.username
     const password = req.body.password
-    
     users.push({
-            username,
-            password
+        username: username,
+        password: password
     })
-    res.send({
-        message: "you   have signed up"
+
+    // we should check if a user with this username already exists
+
+    res.json({
+        message: "You are signed up"
     })
-});
+})
 
-app.post("/signin", (req,res) => {
-    const username = req.body.username
-    const password = req.body.password
-    
-    const foundUser = users.find(user => user.username === username && user.password === password);
+app.post("/signin", logger, function(req, res) {
+    const username = req.body.username;
+    const password = req.body.password;
 
-    if(!foundUser){
+    let foundUser = null;
+
+    for (let i = 0; i < users.length; i++) {
+        if (users[i].username === username && users[i].password === password) {
+            foundUser = users[i]
+        }
+    }
+
+    if (!foundUser) {
         res.json({
             message: "Credentials incorrect"
         })
-        return
-    }else{
+        return 
+    } else {
         const token = jwt.sign({
-            username
+            username: foundUser.username
         }, JWT_SECRET);
+        res.header("jwt", token);
+
+        res.header("random", "harkirat");
 
         res.json({
             token: token
         })
     }
-});
+})
 
-app.listen(3000)
+
+app.listen(3000);
