@@ -1,9 +1,23 @@
 const express = require("express")
+const { UserModel , TodoModel } = require("./db")
 
 const app = express();
+app.use(express.json());
 
-app.post("/signup", function(req,res){
+app.post("/signup", async function(req,res){
+    const email = req.body.email;
+    const password = req.body.password;
+    const name = req.body.name;
 
+    await UserModel.insert({
+        email: email,
+        password: password,
+        name: name
+    })
+
+    res.json({
+        message: "You are signed up"
+    })
 });
 
 app.post("/signin", function(req,res){

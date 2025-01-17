@@ -13,3 +13,11 @@ const Todo = new Schema({
     done: Boolean,
     userID: ObjectId
 })
+
+const UserModel = mongoose.model('users', User);
+const TodoModel = mongoose.model('todo',Todo);
+
+module.exports = {
+    UserModel,
+    TodoModel   
+}
