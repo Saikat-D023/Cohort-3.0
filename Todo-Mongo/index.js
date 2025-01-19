@@ -35,3 +35,4 @@ app.get("/todos", function(req,res){
 app.listen(3000)
 
 //ok im sry
+//bad weekend bcoz of bad company
