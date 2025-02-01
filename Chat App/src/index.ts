@@ -1,9 +1,13 @@
-import { WebSocketServer } from "ws";
+import { WebSocketServer, WebSocket } from "ws";
 
 const wss = new WebSocketServer({ port: 8080 });
 
-let userCount = 0;
-let allSockets = [];
+interface User {
+    socket: WebSocket;
+    room: string
+}
+
+let allSockets: WebSocket[] = [];
 
 wss.on("connection", (socket)=>{
     
@@ -16,5 +20,9 @@ wss.on("connection", (socket)=>{
             const s = allSockets[i];
             s.send(message.toString() + ": sent from the server")
         }
+    });
+    
+    socket.on("disconnect", ()=>{
+        allSockets = allSockets.filter(x => x != socket)
     })
 })
